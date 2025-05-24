@@ -7,14 +7,6 @@ export class DataResource<T> {
     return data;
   }
 
-  async delete(id: string) {
-    const req = await fetch(`${this.endpoint} / ${id}`, {
-      method: "DELETE",
-    });
-
-    return req.json();
-  }
-
   async create(pizza: T) {
     const req = await fetch(`${this.endpoint}`, {
       method: "POST",
@@ -32,15 +24,21 @@ export class DataResource<T> {
     return req.json();
   }
 
-  async update(pizza: T) {
-    const req = await fetch(`${this.endpoint}`, {
-      method: "PUt",
+  async update(id: number, updated: T): Promise<T> {
+    const res = await fetch(`${this.endpoint}/${id}`, {
+      method: "PUT",
       headers: {
-        "Content-type": "application/json",
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(pizza),
+      body: JSON.stringify(updated),
     });
+    return res.json();
+  }
 
+  async delete(id: string) {
+    const req = await fetch(`${this.endpoint}/${id}`, {
+      method: "DELETE",
+    });
     return req.json();
   }
 }

@@ -10,7 +10,7 @@ function createPizzaTemplate(pizza: PizzaModel): string {
           <span>$${pizza.price}</span>
           <div class="toppings">${pizza.toppings.toString()}</div>
          <button class="edit-btn" data-id="${pizza.id}">Edit</button>
-          <button>Delete</button>
+          <button class="delete-btn" data-id="${pizza.id}">Delete</button>
         </div>
     `;
 }
@@ -29,13 +29,24 @@ document.addEventListener("DOMContentLoaded", async () => {
   const pizzas = await Pizza.loadAll();
   const createdPizzas = pizzas.map(createPizzaTemplate);
   renderTemplate(createdPizzas, root);
+});
 
-  document.querySelectorAll(".edit-btn").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      const id = (e.target as HTMLElement).getAttribute("data-id");
-      if (id) {
-        window.location.href = `./edit.html?id=${id}`;
-      }
-    });
-  });
+document.addEventListener("click", (e) => {
+  const target = e.target as HTMLElement;
+
+  if (target.classList.contains("edit-btn")) {
+    const id = target.getAttribute("data-id");
+    if (id) {
+      window.location.href = `./edit.html?id=${id}`;
+    }
+  }
+
+  if (target.classList.contains("delete-btn")) {
+    const id = target.getAttribute("data-id");
+    if (id && confirm("Are you sure you want to delete this pizza?")) {
+      Pizza.delete(id).then(() => {
+        window.location.reload();
+      });
+    }
+  }
 });
