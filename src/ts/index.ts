@@ -9,6 +9,8 @@ function createPizzaTemplate(pizza: PizzaModel): string {
           <p class="decription">${pizza.description}</p>
           <span>$${pizza.price}</span>
           <div class="toppings">${pizza.toppings.toString()}</div>
+         <button class="edit-btn" data-id="${pizza.id}">Edit</button>
+          <button>Delete</button>
         </div>
     `;
 }
@@ -25,8 +27,15 @@ function renderTemplate(createdPizzas: string[], root: Element) {
 
 document.addEventListener("DOMContentLoaded", async () => {
   const pizzas = await Pizza.loadAll();
-
   const createdPizzas = pizzas.map(createPizzaTemplate);
-
   renderTemplate(createdPizzas, root);
+
+  document.querySelectorAll(".edit-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const id = (e.target as HTMLElement).getAttribute("data-id");
+      if (id) {
+        window.location.href = `./edit.html?id=${id}`;
+      }
+    });
+  });
 });

@@ -31,4 +31,16 @@ export class DataResource<T> {
     const req = await fetch(`${this.endpoint}/${id}`);
     return req.json();
   }
+
+  async update(pizza: T) {
+    const req = await fetch(`${this.endpoint}`, {
+      method: "PUt",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(pizza),
+    });
+
+    return req.json();
+  }
 }
